@@ -1,0 +1,17 @@
+### Terraform ###
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Terraform modules managed by the shell, lock just gets in the way
+.terraform.lock.hcl
+
+# created by the "ter" wrapper
+show.json
+
+### Nix ###
+boot/image
