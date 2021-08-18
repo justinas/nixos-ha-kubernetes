@@ -15,17 +15,25 @@ let
   make-boot-image = pkgs.writeShellScriptBin "make-boot-image" ''
     nix-build -o boot/image boot/image.nix
   '';
+
+  make-certs = pkgs.writeShellScriptBin "make-certs" ''
+    $(nix-build --no-out-link certs)/bin/generate-certs
+  '';
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    # software
+    # software for deployment
     colmena
     jq
     libxslt
     myTerraform
 
+    # software for testing
+    etcd
+
     # scripts
     make-boot-image
+    make-certs
     ter
   ];
 }
