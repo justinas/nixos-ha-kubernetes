@@ -9,4 +9,6 @@ etcdctl --endpoints "https://$etcd1_ip:2379" \
     --key-file ./certs/generated/etcd/peer-key.pem \
     member list | grep -q isLeader=true
 
+k --request-timeout 1 cluster-info
+
 echo "Success."
