@@ -52,6 +52,8 @@ in
     writeJSONText name (lib.attrsets.recursiveUpdate csrDefaults {
       CN = cn;
       hosts = [ cn ] ++ altNames;
+      names = if organization == null then null else [
+        { "O" = organization; }
+      ];
     });
-
 }

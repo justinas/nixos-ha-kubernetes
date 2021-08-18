@@ -12,6 +12,10 @@ let
       ${myTerraform}/bin/terraform show -json > show.json
   '';
 
+  k = pkgs.writeShellScriptBin "k" ''
+    kubectl --kubeconfig certs/generated/kubernetes/admin/config $@
+  '';
+
   make-boot-image = pkgs.writeShellScriptBin "make-boot-image" ''
     nix-build -o boot/image boot/image.nix
   '';
@@ -30,8 +34,10 @@ pkgs.mkShell {
 
     # software for testing
     etcd
+    kubectl
 
     # scripts
+    k
     make-boot-image
     make-certs
     ter

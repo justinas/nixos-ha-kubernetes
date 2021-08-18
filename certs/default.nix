@@ -11,4 +11,5 @@ pkgs.writeShellScriptBin "generate-certs" ''
 
   [ ! -d "$out" ] || (echo "./certs/generated exists, refusing to overwrite its contents" && exit 1)
   ${pkgs.callPackage ./etcd.nix { }}
+  ${pkgs.callPackage ./kubernetes.nix { }}
 ''

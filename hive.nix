@@ -4,10 +4,18 @@ let
 
   inherit (pkgs.callPackage ./resources.nix { }) resources resourcesByRole;
   inherit (import ./utils.nix) nodeIP;
+
   etcdHosts = map (r: r.values.name) (resourcesByRole "etcd");
+  controlPlaneHosts = map (r: r.values.name) (resourcesByRole "controlplane");
+
   etcdConf = { ... }: {
     imports = [ ./modules/etcd.nix ];
     deployment.tags = [ "etcd" ];
+  };
+
+  controlPlaneConf = { ... }: {
+    imports = [ ./modules/controlplane ];
+    deployment.tags = [ "controlplane" ];
   };
 in
 {
@@ -25,4 +33,5 @@ in
     networking.hostName = name;
   };
 }
-  // builtins.listToAttrs (map (h: { name = h; value = etcdConf; }) etcdHosts)
+// builtins.listToAttrs (map (h: { name = h; value = etcdConf; }) etcdHosts)
+  // builtins.listToAttrs (map (h: { name = h; value = controlPlaneConf; }) controlPlaneHosts)

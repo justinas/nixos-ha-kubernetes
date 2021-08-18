@@ -12,5 +12,6 @@
 
   users.users = {
     etcd = { isSystemUser = true; };
+    kubernetes = { isSystemUser = true; };
   };
 }
