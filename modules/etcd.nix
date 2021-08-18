@@ -42,4 +42,9 @@ in
     peerTrustedCaFile = "/var/lib/secrets/etcd/ca.pem";
     trustedCaFile = "/var/lib/secrets/etcd/ca.pem";
   };
+
+  systemd.services.etcd = {
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+  };
 }
