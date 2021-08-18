@@ -6,6 +6,7 @@ let
   inherit (import ./utils.nix) nodeIP;
   etcdHosts = map (r: r.values.name) (resourcesByRole "etcd");
   etcdConf = { ... }: {
+    imports = [ ./modules/etcd.nix ];
     deployment.tags = [ "etcd" ];
   };
 in

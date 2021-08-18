@@ -7,8 +7,8 @@ let
     cn = "etcd";
     altNames = getAltNames "etcd";
   };
-  clientCsr = mkCsr "etcd-client" {
-    cn = "etcd-client";
+  peerCsr = mkCsr "etcd-peer" {
+    cn = "etcd-peer";
     altNames = getAltNames "etcd";
   };
 in
@@ -20,8 +20,8 @@ in
     | ${cfssl}/bin/cfssljson -bare ca
   ${cfssl}/bin/cfssl gencert -ca ca.pem -ca-key ca-key.pem -config ${caConfig} -profile server ${serverCsr} \
     | ${cfssl}/bin/cfssljson -bare server
-  ${cfssl}/bin/cfssl gencert -ca ca.pem -ca-key ca-key.pem -config ${caConfig} -profile client ${clientCsr} \
-    | ${cfssl}/bin/cfssljson -bare client
+  ${cfssl}/bin/cfssl gencert -ca ca.pem -ca-key ca-key.pem -config ${caConfig} -profile peer ${peerCsr} \
+    | ${cfssl}/bin/cfssljson -bare peer
 
   popd > /dev/null
 ''

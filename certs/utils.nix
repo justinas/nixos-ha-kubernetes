@@ -23,6 +23,10 @@ in
             "expiry": "87600h",
             "usages": ["signing", "key encipherment", "client auth"]
           },
+          "peer": {
+            "expiry": "87600h",
+            "usages": ["signing", "key encipherment", "client auth", "server auth"]
+          },
           "server": {
             "expiry": "8760h",
             "usages": ["signing", "key encipherment", "server auth"]
