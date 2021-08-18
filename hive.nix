@@ -3,6 +3,7 @@ let
   lib = pkgs.lib;
 
   inherit (pkgs.callPackage ./resources.nix { }) resources resourcesByRole;
+  inherit (import ./utils.nix) nodeIP;
   etcdHosts = map (r: r.values.name) (resourcesByRole "etcd");
   etcdConf = { ... }: {
     deployment.tags = [ "etcd" ];
@@ -13,19 +14,14 @@ in
     nixpkgs = import (import ./nixpkgs.nix);
   };
 
-  defaults = { name, self, ... }:
-    let
-      interface = (builtins.head self.values.network_interface);
-      ip = (builtins.head interface.addresses);
-    in
-    {
-      imports = [
-        ./modules/autoresources.nix
-        ./modules/base.nix
-      ];
+  defaults = { name, self, ... }: {
+    imports = [
+      ./modules/autoresources.nix
+      ./modules/base.nix
+    ];
 
-      deployment.targetHost = ip;
-      networking.hostName = name;
-    };
+    deployment.targetHost = nodeIP self;
+    networking.hostName = name;
+  };
 }
   // builtins.listToAttrs (map (h: { name = h; value = etcdConf; }) etcdHosts)
