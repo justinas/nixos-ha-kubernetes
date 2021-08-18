@@ -29,7 +29,7 @@ in
           },
           "server": {
             "expiry": "8760h",
-            "usages": ["signing", "key encipherment", "server auth"]
+            "usages": ["signing", "key encipherment", "client auth", "server auth"]
           }
         }
       }

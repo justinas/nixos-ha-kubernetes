@@ -31,6 +31,7 @@ in
     listenPeerUrls = [ "https://${nodeIP self}:2380" "https://127.0.0.1:2380" ];
 
     clientCertAuth = true;
+    peerClientCertAuth = true;
 
     certFile = "/var/lib/secrets/etcd/server.pem";
     keyFile = "/var/lib/secrets/etcd/server-key.pem";
