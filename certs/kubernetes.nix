@@ -4,7 +4,12 @@ let
   inherit (import ../utils.nix) nodeIP;
   inherit (pkgs.callPackage ./utils.nix { }) getAltNames mkCsr;
 
-  caCsr = mkCsr "kubernetes-ca" { cn = "kubernetes-ca"; };
+  # TODO: replace with virtual IP
+  controlPlane1IP = nodeIP (builtins.head (resourcesByRole "controlplane"));
+
+  caCsr = mkCsr "kubernetes-ca" {
+    cn = "kubernetes-ca";
+  };
 
   apiServerCsr = mkCsr "kube-api-server" {
     cn = "kubernetes";
@@ -40,20 +45,27 @@ in
   mkdir -p $out/kubernetes/{apiserver,kubelet}
 
   pushd $out/etcd > /dev/null
-
   genCert client ../kubernetes/apiserver/etcd-client ${etcdClientCsr}
-
   popd > /dev/null
 
   pushd $out/kubernetes > /dev/null
 
   genCa ${caCsr}
-
   genCert server apiserver/server ${apiServerCsr}
-
   genCert client admin ${adminCsr}
 
   ${builtins.concatStringsSep "\n" workerScripts}
+
+  ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-credentials admin \
+      --client-certificate=admin.pem \
+      --client-key=admin-key.pem
+  ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-cluster virt \
+      --certificate-authority=ca.pem \
+      --server=https://${controlPlane1IP}:6443
+  ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-context virt \
+      --user admin \
+      --cluster virt
+  ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config use-context virt > /dev/null
 
   popd > /dev/null
 ''
