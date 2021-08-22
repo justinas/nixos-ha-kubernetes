@@ -15,27 +15,6 @@ let
   };
 in
 {
-  caConfig = pkgs.writeText "ca-config.json" ''
-    {
-      "signing": {
-        "profiles": {
-          "client": {
-            "expiry": "87600h",
-            "usages": ["signing", "key encipherment", "client auth"]
-          },
-          "peer": {
-            "expiry": "87600h",
-            "usages": ["signing", "key encipherment", "client auth", "server auth"]
-          },
-          "server": {
-            "expiry": "8760h",
-            "usages": ["signing", "key encipherment", "client auth", "server auth"]
-          }
-        }
-      }
-    }
-  '';
-
   # Get IP/DNS alternative names for all servers of this role.
   # We currently use the same certificates for all replicas of a role (where possible),
   # so, for example, etcd certificate will have alt names:

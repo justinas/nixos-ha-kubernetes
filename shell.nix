@@ -13,7 +13,7 @@ let
   '';
 
   k = pkgs.writeShellScriptBin "k" ''
-    kubectl --kubeconfig certs/generated/kubernetes/admin/config $@
+    kubectl --kubeconfig certs/generated/kubernetes/admin.kubeconfig $@
   '';
 
   make-boot-image = pkgs.writeShellScriptBin "make-boot-image" ''
