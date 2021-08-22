@@ -6,6 +6,8 @@ let
   controlPlaneIP = nodeIP (builtins.head (resourcesByRole "controlplane"));
 in
 {
+  imports = [ ./flannel.nix ];
+
   deployment.keys = {
     "ca.pem" = {
       keyFile = ../../certs/generated/kubernetes/ca.pem;
