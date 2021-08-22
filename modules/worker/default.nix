@@ -42,6 +42,7 @@ in
 
   services.kubernetes.kubelet = {
     enable = true;
+    unschedulable = false;
     kubeconfig = {
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = "/var/lib/secrets/kubernetes/kubelet/apiserver-client.pem";
