@@ -1,5 +1,5 @@
 { ... }: {
-  imports = [ ./apiserver.nix ];
+  imports = [ ./apiserver.nix ./controller-manager.nix ];
 
   deployment.keys."ca.pem" = {
     keyFile = ../../certs/generated/kubernetes/ca.pem;

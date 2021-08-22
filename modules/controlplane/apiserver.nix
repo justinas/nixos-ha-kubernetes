@@ -10,12 +10,6 @@ let
 in
 {
   deployment.keys = {
-    "ca.pem" = {
-      keyFile = ../../certs/generated/kubernetes/ca.pem;
-      destDir = "/var/lib/secrets/kubernetes";
-      user = "kubernetes";
-    };
-
     "server.pem" = mkSecret "server.pem";
     "server-key.pem" = mkSecret "server-key.pem";
 

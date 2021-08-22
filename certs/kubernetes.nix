@@ -17,6 +17,11 @@ let
       [ "kubernetes" "kubernetes.default" "kubernetes.default.svc" "kubernetes.default.svc.cluster" "kubernetes.svc.cluster.local" ];
   };
 
+  cmCsr = mkCsr "kube-controller-manager" {
+    cn = "system:kube-controller-manager";
+    organization = "system:kube-controller-manager";
+  };
+
   adminCsr = mkCsr "admin" {
     cn = "admin";
     organization = "system:masters";
@@ -42,7 +47,7 @@ let
   workerScripts = map (csr: "genCert client kubelet/${csr.name} ${csr.csr}") workerCsrs;
 in
 ''
-  mkdir -p $out/kubernetes/{apiserver,kubelet}
+  mkdir -p $out/kubernetes/{apiserver,controller-manager,kubelet}
 
   pushd $out/etcd > /dev/null
   genCert client ../kubernetes/apiserver/etcd-client ${etcdClientCsr}
@@ -52,6 +57,7 @@ in
 
   genCa ${caCsr}
   genCert server apiserver/server ${apiServerCsr}
+  genCert client controller-manager ${cmCsr}
   genCert client admin ${adminCsr}
 
   ${builtins.concatStringsSep "\n" workerScripts}
