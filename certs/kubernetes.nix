@@ -17,6 +17,12 @@ let
       [ "kubernetes" "kubernetes.default" "kubernetes.default.svc" "kubernetes.default.svc.cluster" "kubernetes.svc.cluster.local" ];
   };
 
+  apiServerKubeletClientCsr = mkCsr "kube-api-server-kubelet-client" {
+    cn = "kube-api-server";
+    altNames = getAltNames "controlplane";
+    organization = "system:masters";
+  };
+
   cmCsr = mkCsr "kube-controller-manager" {
     cn = "system:kube-controller-manager";
     organization = "system:kube-controller-manager";
@@ -30,6 +36,10 @@ let
   etcdClientCsr = mkCsr "etcd-client" {
     cn = "kubernetes";
     altNames = getAltNames "controlplane";
+  };
+
+  kubeletCsr = mkCsr "kubelet" {
+    cn = "kubelet";
   };
 
   proxyCsr = mkCsr "kube-proxy" {
@@ -54,7 +64,7 @@ let
     })
     (resourcesByRole "worker");
 
-  workerScripts = map (csr: "genCert client kubelet/${csr.name} ${csr.csr}") workerCsrs;
+  workerScripts = map (csr: "genCert peer kubelet/${csr.name} ${csr.csr}") workerCsrs;
 in
 ''
   mkdir -p $out/kubernetes/{apiserver,controller-manager,kubelet}
@@ -67,6 +77,7 @@ in
 
   genCa ${caCsr}
   genCert server apiserver/server ${apiServerCsr}
+  genCert server apiserver/kubelet-client ${apiServerKubeletClientCsr}
   genCert client controller-manager ${cmCsr}
   genCert client proxy ${proxyCsr}
   genCert client scheduler ${schedulerCsr}

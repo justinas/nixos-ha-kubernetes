@@ -13,6 +13,9 @@ in
     "server.pem" = mkSecret "server.pem";
     "server-key.pem" = mkSecret "server-key.pem";
 
+    "kubelet-client.pem" = mkSecret "kubelet-client.pem";
+    "kubelet-client-key.pem" = mkSecret "kubelet-client-key.pem";
+
     "etcd-ca.pem" = {
       keyFile = ../../certs/generated/etcd/ca.pem;
       destDir = "/var/lib/secrets/kubernetes/apiserver";
@@ -36,6 +39,10 @@ in
     };
 
     clientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
+
+    kubeletClientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
+    kubeletClientCertFile = "/var/lib/secrets/kubernetes/apiserver/kubelet-client.pem";
+    kubeletClientKeyFile = "/var/lib/secrets/kubernetes/apiserver/kubelet-client-key.pem";
 
     # TODO: separate from server keys
     serviceAccountKeyFile = "/var/lib/secrets/kubernetes/apiserver/server.pem";

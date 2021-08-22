@@ -1,4 +1,4 @@
-{ name, resourcesByRole, ... }:
+{ config, name, resourcesByRole, ... }:
 let
   inherit (import ../../utils.nix) nodeIP;
 
@@ -15,15 +15,15 @@ in
       user = "kubernetes";
     };
 
-    "apiserver-client.pem" = {
+    "kubelet.pem" = {
       keyFile = ../../certs/generated/kubernetes/kubelet + "/${name}.pem";
-      destDir = "/var/lib/secrets/kubernetes/kubelet";
+      destDir = "/var/lib/secrets/kubernetes";
       user = "kubernetes";
     };
 
-    "apiserver-client-key.pem" = {
+    "kubelet-key.pem" = {
       keyFile = ../../certs/generated/kubernetes/kubelet + "/${name}-key.pem";
-      destDir = "/var/lib/secrets/kubernetes/kubelet";
+      destDir = "/var/lib/secrets/kubernetes";
       user = "kubernetes";
     };
 
@@ -40,17 +40,24 @@ in
     };
   };
 
+  networking.firewall.allowedTCPPorts = [
+    config.services.kubernetes.kubelet.port
+  ];
+
   services.kubernetes.clusterCidr = "10.200.0.0/16";
 
-  services.kubernetes.kubelet = {
+  services.kubernetes.kubelet = rec {
     enable = true;
     unschedulable = false;
-    kubeconfig = {
+    kubeconfig = rec {
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
-      certFile = "/var/lib/secrets/kubernetes/kubelet/apiserver-client.pem";
-      keyFile = "/var/lib/secrets/kubernetes/kubelet/apiserver-client-key.pem";
+      certFile = tlsCertFile;
+      keyFile = tlsKeyFile;
       server = "https://${controlPlaneIP}:6443";
     };
+    clientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
+    tlsCertFile = "/var/lib/secrets/kubernetes/kubelet.pem";
+    tlsKeyFile = "/var/lib/secrets/kubernetes/kubelet-key.pem";
   };
 
   services.kubernetes.proxy = {
