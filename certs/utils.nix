@@ -37,7 +37,7 @@ in
   '';
 
   # Get IP/DNS alternative names for all servers of this role.
-  # We currently use the same certificates for all replicas of a role,
+  # We currently use the same certificates for all replicas of a role (where possible),
   # so, for example, etcd certificate will have alt names:
   # etcd1, etcd2, etcd3, 10.240.0.xx1, 10.240.0.xx2, 10.240.0.xx3
   getAltNames = role:

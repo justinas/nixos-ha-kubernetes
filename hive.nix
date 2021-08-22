@@ -7,6 +7,7 @@ let
 
   etcdHosts = map (r: r.values.name) (resourcesByRole "etcd");
   controlPlaneHosts = map (r: r.values.name) (resourcesByRole "controlplane");
+  workerHosts = map (r: r.values.name) (resourcesByRole "worker");
 
   etcdConf = { ... }: {
     imports = [ ./modules/etcd.nix ];
@@ -16,6 +17,11 @@ let
   controlPlaneConf = { ... }: {
     imports = [ ./modules/controlplane ];
     deployment.tags = [ "controlplane" ];
+  };
+
+  workerConf = { ... }: {
+    imports = [ ./modules/worker ];
+    deployment.tags = [ "worker" ];
   };
 in
 {
@@ -34,4 +40,5 @@ in
   };
 }
 // builtins.listToAttrs (map (h: { name = h; value = etcdConf; }) etcdHosts)
-  // builtins.listToAttrs (map (h: { name = h; value = controlPlaneConf; }) controlPlaneHosts)
+// builtins.listToAttrs (map (h: { name = h; value = controlPlaneConf; }) controlPlaneHosts)
+  // builtins.listToAttrs (map (h: { name = h; value = workerConf; }) workerHosts)

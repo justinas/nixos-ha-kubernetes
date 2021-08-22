@@ -1,5 +1,7 @@
 { pkgs, cfssl, kubectl }:
 let
+  inherit (pkgs.callPackage ../resources.nix { }) resourcesByRole;
+  inherit (import ../utils.nix) nodeIP;
   inherit (pkgs.callPackage ./utils.nix { }) caConfig getAltNames mkCsr;
 
   caCsr = mkCsr "kubernetes-ca" { cn = "kubernetes-ca"; };
@@ -19,9 +21,27 @@ let
     cn = "kubernetes";
     altNames = getAltNames "controlplane";
   };
+
+  workerCsrs = map
+    (r: {
+      name = r.values.name;
+      csr = mkCsr "${r.values.name}" {
+        cn = "system:node:${r.values.name}";
+        organization = "system:nodes";
+        # TODO: unify with getAltNames?
+        altNames = [ r.values.name (nodeIP r) ];
+      };
+    })
+    (resourcesByRole "worker");
+
+  workerScripts = map
+    (csr: '' ${cfssl}/bin/cfssl gencert -ca ../ca.pem -ca-key ../ca-key.pem -config ${caConfig} -profile client ${csr.csr} \
+      | ${cfssl}/bin/cfssljson -bare ${csr.name}
+  '')
+    workerCsrs;
 in
 ''
-  mkdir -p $out/kubernetes/{apiserver,admin}
+  mkdir -p $out/kubernetes/{apiserver,admin,kubelet}
   pushd $out/kubernetes > /dev/null
 
   ${cfssl}/bin/cfssl gencert -initca ${caCsr} \
@@ -42,15 +62,13 @@ in
   ${cfssl}/bin/cfssl gencert -ca ../ca.pem -ca-key ../ca-key.pem -config ${caConfig} -profile server ${adminCsr} \
     | ${cfssl}/bin/cfssljson -bare client
 
-  ${kubectl}/bin/kubectl --kubeconfig config config set-credentials admin \
-      --client-certificate=client.pem \
-      --client-key=client-key.pem
-  ${kubectl}/bin/kubectl --kubeconfig config config set-cluster virt \
-      --certificate-authority=../ca.pem \
-      --server=https://10.240.0.117:6443 # TODO: dynamic or replace with virtual IP
-  ${kubectl}/bin/kubectl --kubeconfig config config set-context virt --user admin --cluster virt
-  ${kubectl}/bin/kubectl --kubeconfig config config use-context virt
+  popd > /dev/null
 
+  pushd kubelet > /dev/null
+
+  ${builtins.concatStringsSep "\n" workerScripts}
+
+  popd > /dev/null
 
   popd > /dev/null
 ''

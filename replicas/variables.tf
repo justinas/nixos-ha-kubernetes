@@ -1,3 +1,8 @@
+variable "memory" {
+  type        = number
+  description = "Amout of megabytes of RAM to give to each machine"
+}
+
 variable "name" {
   type        = string
   description = "Base name for the machine and boot volume"

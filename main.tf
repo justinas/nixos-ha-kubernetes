@@ -54,14 +54,25 @@ resource "libvirt_volume" "nixos_boot" {
 
 module "replicas" {
   for_each = {
-    "etcd" : var.etcd_instances,
-    "controlplane" : var.control_plane_instances,
+    "etcd" : {
+      "count" : var.etcd_instances,
+      "memory" : 512,
+    }
+    "controlplane" : {
+      "count" : var.control_plane_instances,
+      "memory" : 512,
+    }
+    "worker" : {
+      "count" : var.worker_instances,
+      "memory" : 1024,
+    }
   }
 
   source = "./replicas"
 
   name         = each.key
-  num_replicas = each.value
+  num_replicas = each.value.count
+  memory       = each.value.memory
   network_id   = libvirt_network.k8s.id
   volume_id    = libvirt_volume.nixos_boot.id
 }
@@ -74,4 +85,9 @@ variable "etcd_instances" {
 variable "control_plane_instances" {
   type        = number
   description = "Amount of control plane hosts to spawn"
+}
+
+variable "worker_instances" {
+  type        = number
+  description = "Amount of worker hosts to spawn"
 }
