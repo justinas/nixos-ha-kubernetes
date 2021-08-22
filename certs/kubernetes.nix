@@ -32,6 +32,11 @@ let
     altNames = getAltNames "controlplane";
   };
 
+  proxyCsr = mkCsr "kube-proxy" {
+    cn = "system:kube-proxy";
+    organization = "system:node-proxier";
+  };
+
   workerCsrs = map
     (r: {
       name = r.values.name;
@@ -58,6 +63,7 @@ in
   genCa ${caCsr}
   genCert server apiserver/server ${apiServerCsr}
   genCert client controller-manager ${cmCsr}
+  genCert client proxy ${proxyCsr}
   genCert client admin ${adminCsr}
 
   ${builtins.concatStringsSep "\n" workerScripts}

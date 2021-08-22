@@ -6,4 +6,6 @@
     destDir = "/var/lib/secrets/kubernetes";
     user = "kubernetes";
   };
+
+  services.kubernetes.clusterCidr = "10.200.0.0/16";
 }
