@@ -37,6 +37,11 @@ let
     organization = "system:node-proxier";
   };
 
+  schedulerCsr = mkCsr "kube-scheduler" rec {
+    cn = "system:kube-scheduler";
+    organization = cn;
+  };
+
   workerCsrs = map
     (r: {
       name = r.values.name;
@@ -64,6 +69,7 @@ in
   genCert server apiserver/server ${apiServerCsr}
   genCert client controller-manager ${cmCsr}
   genCert client proxy ${proxyCsr}
+  genCert client scheduler ${schedulerCsr}
   genCert client admin ${adminCsr}
 
   ${builtins.concatStringsSep "\n" workerScripts}
