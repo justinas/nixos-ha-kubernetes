@@ -1,4 +1,4 @@
-{ config, resourcesByRole, ... }:
+{ config, lib, resourcesByRole, ... }:
 let
   etcdServers = map (r: "https://${r.values.name}:2379") (resourcesByRole "etcd");
 in
@@ -40,6 +40,20 @@ in
       keyFile = "/var/lib/secrets/flannel/etcd-client-key.pem";
     };
   };
+
+  # https://github.com/flannel-io/flannel/issues/1155
+  # https://github.com/onixie/nikops/commit/24f66eaa1c6fb40eca4772ee9b933333fe06a85d
+  systemd.network = {
+    enable = true;
+    links."10-flannel" = {
+      matchConfig.OriginalName = "flannel*";
+      linkConfig.MACAddressPolicy = "none";
+    };
+  };
+
+  # systemd.network module makes this true by default, however:
+  # https://github.com/NixOS/nixpkgs/issues/114118
+  services.resolved.enable = false;
 
   services.kubernetes.kubelet = {
     networkPlugin = "cni";
