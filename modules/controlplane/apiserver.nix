@@ -1,4 +1,4 @@
-{ resourcesByRole, ... }:
+{ lib, resourcesByRole, ... }:
 let
   etcdServers = map (r: "https://${r.values.name}:2379") (resourcesByRole "etcd");
 
@@ -7,6 +7,30 @@ let
     destDir = "/var/lib/secrets/kubernetes/apiserver";
     user = "kubernetes";
   };
+
+  corednsPolicies = map
+    (r: {
+      apiVersion = "abac.authorization.kubernetes.io/v1beta1";
+      kind = "Policy";
+      spec = {
+        user = "system:coredns";
+        namespace = "*";
+        resource = r;
+        readonly = true;
+      };
+    }) [ "endpoints" "services" "pods" "namespaces" ]
+  ++ lib.singleton
+    {
+      apiVersion = "abac.authorization.kubernetes.io/v1beta1";
+      kind = "Policy";
+      spec = {
+        user = "system:coredns";
+        namespace = "*";
+        resource = "endpointslices";
+        apiGroup = "discovery.k8s.io";
+        readonly = true;
+      };
+    };
 in
 {
   deployment.keys = {
@@ -30,6 +54,11 @@ in
   services.kubernetes.apiserver = {
     enable = true;
     serviceClusterIpRange = "10.32.0.0/24";
+
+    # Using ABAC for CoreDNS running outside of k8s
+    # is more simple in this case than using kube-addon-manager
+    authorizationMode = [ "RBAC" "Node" "ABAC" ];
+    authorizationPolicy = corednsPolicies;
 
     etcd = {
       servers = etcdServers;

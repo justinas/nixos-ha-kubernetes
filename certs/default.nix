@@ -61,5 +61,6 @@ pkgs.writeShellScriptBin "generate-certs" ''
 
   ${pkgs.callPackage ./etcd.nix { }}
   ${pkgs.callPackage ./kubernetes.nix { }}
+  ${pkgs.callPackage ./coredns.nix { }}
   ${pkgs.callPackage ./flannel.nix { }}
 ''

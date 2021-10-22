@@ -18,4 +18,10 @@ k run --rm --attach --restart Never \
     --command id \
     | tee /dev/stderr | grep -q "uid=0(root) gid=0(root) groups=10(wheel)"
 
+k run --rm --attach --restart Never \
+    --image busybox \
+    busybox \
+    --command nslookup kubernetes \
+    | tee /dev/stderr | grep -q "Address: 10.32.0.1"
+
 echo "Success."

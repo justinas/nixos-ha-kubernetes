@@ -6,13 +6,14 @@ let
   controlPlaneIP = nodeIP (builtins.head (resourcesByRole "controlplane"));
 in
 {
-  imports = [ ./flannel.nix ];
+  imports = [ ./coredns.nix ./flannel.nix ];
 
   deployment.keys = {
     "ca.pem" = {
       keyFile = ../../certs/generated/kubernetes/ca.pem;
       destDir = "/var/lib/secrets/kubernetes";
       user = "kubernetes";
+      permissions = "0644";
     };
 
     "kubelet.pem" = {
