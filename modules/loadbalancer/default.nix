@@ -9,6 +9,7 @@ in
 {
   services.haproxy = {
     enable = true;
+    # TODO: backend healthchecks
     config = ''
       defaults
         timeout connect 10s
@@ -27,6 +28,7 @@ in
   services.keepalived = {
     enable = true;
     vrrpInstances.k8s = {
+      # TODO: at least basic (hardcoded) auth or other protective measures
       interface = "ens3";
       priority =
         # Prioritize loadbalancer1 over loadbalancer2 over loadbalancer3, etc.
