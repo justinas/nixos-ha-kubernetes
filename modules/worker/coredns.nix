@@ -1,8 +1,7 @@
 { pkgs, resourcesByRole, self, ... }:
 let
+  inherit (import ../../consts.nix) virtualIP;
   inherit (import ../../utils.nix) nodeIP;
-  # TODO: replace with virtual IP
-  controlPlane1IP = nodeIP (builtins.head (resourcesByRole "controlplane"));
 in
 {
   deployment.keys = {
@@ -28,7 +27,7 @@ in
     config = ''
       .:53 {
         kubernetes cluster.local {
-          endpoint https://${controlPlane1IP}:6443
+          endpoint https://${virtualIP}
           tls /var/lib/secrets/coredns/coredns-kube.pem /var/lib/secrets/coredns/coredns-kube-key.pem /var/lib/secrets/coredns/kube-ca.pem
           pods verified
         }

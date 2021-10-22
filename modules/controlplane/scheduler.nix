@@ -1,9 +1,6 @@
 { resourcesByRole, ... }:
 let
-  inherit (import ../../utils.nix) nodeIP;
-
-  # TODO: point to virtual IP instead
-  controlPlaneIP = nodeIP (builtins.head (resourcesByRole "controlplane"));
+  inherit (import ../../consts.nix) virtualIP;
 in
 {
   deployment.keys = {
@@ -25,7 +22,7 @@ in
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = "/var/lib/secrets/kubernetes/scheduler.pem";
       keyFile = "/var/lib/secrets/kubernetes/scheduler-key.pem";
-      server = "https://${controlPlaneIP}:6443";
+      server = "https://${virtualIP}";
     };
   };
 }

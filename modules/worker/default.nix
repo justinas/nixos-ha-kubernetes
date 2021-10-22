@@ -1,9 +1,6 @@
 { config, name, resourcesByRole, ... }:
 let
-  inherit (import ../../utils.nix) nodeIP;
-
-  # TODO: point to virtual IP instead
-  controlPlaneIP = nodeIP (builtins.head (resourcesByRole "controlplane"));
+  inherit (import ../../consts.nix) virtualIP;
 in
 {
   imports = [ ./coredns.nix ./flannel.nix ];
@@ -54,7 +51,7 @@ in
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = tlsCertFile;
       keyFile = tlsKeyFile;
-      server = "https://${controlPlaneIP}:6443";
+      server = "https://${virtualIP}";
     };
     clientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
     tlsCertFile = "/var/lib/secrets/kubernetes/kubelet.pem";
@@ -67,7 +64,7 @@ in
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = "/var/lib/secrets/kubernetes/proxy.pem";
       keyFile = "/var/lib/secrets/kubernetes/proxy-key.pem";
-      server = "https://${controlPlaneIP}:6443";
+      server = "https://${virtualIP}";
     };
   };
 }

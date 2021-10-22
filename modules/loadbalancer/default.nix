@@ -1,10 +1,10 @@
 { lib, resourcesByRole, self, ... }:
 let
+  inherit (import ../../consts.nix) virtualIP;
   inherit (import ../../utils.nix) nodeIP;
   backends = map
     (r: "server ${r.values.name} ${nodeIP r}:6443")
     (resourcesByRole "controlplane");
-  virtualIP = "10.240.0.10";
 in
 {
   services.haproxy = {

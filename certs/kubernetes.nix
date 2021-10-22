@@ -1,11 +1,9 @@
-{ pkgs, cfssl, kubectl }:
+{ lib, pkgs, cfssl, kubectl }:
 let
   inherit (pkgs.callPackage ../resources.nix { }) resourcesByRole;
+  inherit (import ../consts.nix) virtualIP;
   inherit (import ../utils.nix) nodeIP;
   inherit (pkgs.callPackage ./utils.nix { }) getAltNames mkCsr;
-
-  # TODO: replace with virtual IP
-  loadBalancer1IP = nodeIP (builtins.head (resourcesByRole "loadbalancer"));
 
   caCsr = mkCsr "kubernetes-ca" {
     cn = "kubernetes-ca";
@@ -14,7 +12,8 @@ let
   apiServerCsr = mkCsr "kube-api-server" {
     cn = "kubernetes";
     altNames =
-      # TODO: add virtual IP
+      lib.singleton virtualIP ++
+      # Alternative names remain, as they might be useful for debugging purposes
       getAltNames "controlplane" ++
       getAltNames "loadbalancer" ++
       [ "kubernetes" "kubernetes.default" "kubernetes.default.svc" "kubernetes.default.svc.cluster" "kubernetes.svc.cluster.local" ];
@@ -93,7 +92,7 @@ in
       --client-key=admin-key.pem
   ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-cluster virt \
       --certificate-authority=ca.pem \
-      --server=https://${loadBalancer1IP}
+      --server=https://${virtualIP}
   ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-context virt \
       --user admin \
       --cluster virt
