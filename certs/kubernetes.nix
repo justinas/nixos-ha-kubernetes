@@ -5,7 +5,7 @@ let
   inherit (pkgs.callPackage ./utils.nix { }) getAltNames mkCsr;
 
   # TODO: replace with virtual IP
-  controlPlane1IP = nodeIP (builtins.head (resourcesByRole "controlplane"));
+  loadBalancer1IP = nodeIP (builtins.head (resourcesByRole "loadbalancer"));
 
   caCsr = mkCsr "kubernetes-ca" {
     cn = "kubernetes-ca";
@@ -13,7 +13,10 @@ let
 
   apiServerCsr = mkCsr "kube-api-server" {
     cn = "kubernetes";
-    altNames = getAltNames "controlplane" ++
+    altNames =
+      # TODO: add virtual IP
+      getAltNames "controlplane" ++
+      getAltNames "loadbalancer" ++
       [ "kubernetes" "kubernetes.default" "kubernetes.default.svc" "kubernetes.default.svc.cluster" "kubernetes.svc.cluster.local" ];
   };
 
@@ -90,7 +93,7 @@ in
       --client-key=admin-key.pem
   ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-cluster virt \
       --certificate-authority=ca.pem \
-      --server=https://${controlPlane1IP}:6443
+      --server=https://${loadBalancer1IP}
   ${kubectl}/bin/kubectl --kubeconfig admin.kubeconfig config set-context virt \
       --user admin \
       --cluster virt

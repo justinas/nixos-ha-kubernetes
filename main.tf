@@ -66,6 +66,10 @@ module "replicas" {
       "count" : var.worker_instances,
       "memory" : 1024,
     }
+    "loadbalancer" : {
+      "count" : var.load_balancer_instances,
+      "memory" : 512,
+    }
   }
 
   source = "./replicas"
@@ -90,4 +94,9 @@ variable "control_plane_instances" {
 variable "worker_instances" {
   type        = number
   description = "Amount of worker hosts to spawn"
+}
+
+variable "load_balancer_instances" {
+  type        = number
+  description = "Amount of control plane load balancer hosts to spawn"
 }
