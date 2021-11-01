@@ -48,7 +48,7 @@ The cluster consists of:
   `kube-apiserver`, `kube-controller-manager`, and `kube-scheduler`.
 * 2 `worker` nodes, running `kubelet`, `kube-proxy`,
   `coredns`, and a CNI network (currently `flannel`).
-* 2 `loadbalancer`, running `keepalived` and `haproxy` which proxies to the Kubernetes API.
+* 2 `loadbalancer`, running `keepalived` and `haproxy`, which proxies to the Kubernetes API.
 
 ### Goals
 * All infrastructure declaratively managed by Terraform and Nix (Colmena).
