@@ -48,11 +48,12 @@ The cluster consists of:
   `kube-apiserver`, `kube-controller-manager`, and `kube-scheduler`.
 * 2 `worker` nodes, running `kubelet`, `kube-proxy`,
   `coredns`, and a CNI network (currently `flannel`).
-* 2 `loadbalancer`, running `keepalived` and `haproxy`, which proxies to the Kubernetes API.
+* 2 `loadbalancer` nodes, running `keepalived` and `haproxy`,
+  which proxies to the Kubernetes API.
 
 ### Goals
 * All infrastructure declaratively managed by Terraform and Nix (Colmena).
-  Zero `kubectl apply -f foo.yaml` invocations required to get a workable cluster.
+  Zero `kubectl apply -f foo.yaml` invocations required to get a functional cluster.
 * All the infrastructure-level services run directly on NixOS / systemd.
   Running `k get pods -A` after the cluster is spun up lists zero pods.
 * Functionality. The cluster should be able to run basic real-life deployments,
