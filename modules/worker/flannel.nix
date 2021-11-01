@@ -43,6 +43,10 @@ in
 
   # https://github.com/flannel-io/flannel/issues/1155
   # https://github.com/onixie/nikops/commit/24f66eaa1c6fb40eca4772ee9b933333fe06a85d
+  #
+  # Seems to have been fixed in Flannel v0.15.1:
+  # https://github.com/flannel-io/flannel/releases/tag/v0.15.1
+  # TODO: try to upgrade flannel package and remove this workaround
   systemd.network = {
     enable = true;
     links."10-flannel" = {
