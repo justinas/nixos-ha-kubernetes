@@ -12,6 +12,16 @@ let
       ${myTerraform}/bin/terraform show -json > show.json
   '';
 
+  ci-lint = pkgs.writeShellScriptBin "ci-lint" ''
+    echo Checking the formatting of Nix files
+    ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check **/*.nix
+
+    echo
+
+    echo Checking the formatting of Terraform files
+    ${myTerraform}/bin/terraform fmt -check -recursive
+  '';
+
   k = pkgs.writeShellScriptBin "k" ''
     kubectl --kubeconfig certs/generated/kubernetes/admin.kubeconfig $@
   '';
@@ -37,6 +47,7 @@ pkgs.mkShell {
     kubectl
 
     # scripts
+    ci-lint
     k
     make-boot-image
     make-certs
