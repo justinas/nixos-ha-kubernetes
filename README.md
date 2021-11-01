@@ -133,6 +133,10 @@ $ rm boot/image # Destroy the base image
 
 ## Contributing
 
+Contributions are welcome, although I might reject any that conflict with the project goals.
+See [TODOs](https://github.com/justinas/nixos-ha-kubernetes/search?q=TODO) in the repo
+for some rough edges you could work on.
+
 Make sure the `ci-lint` script succeeds.
 Make sure the `check.sh` script succeeds after a deploying a fresh cluster.
 
