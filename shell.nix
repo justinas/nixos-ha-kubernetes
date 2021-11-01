@@ -2,8 +2,8 @@
 let
   colmena = import
     (fetchTarball {
-      url = "https://github.com/zhaofengli/colmena/archive/c6ac93152cbfe012013e994c5d1108e5008742d6.tar.gz";
-      sha256 = "0zljn06yszzy1ghzfd3hyzxwfr9b26iydfgyqwag7h0d8bg2mgjr";
+      url = "https://github.com/zhaofengli/colmena/archive/86eeeece3cb13c12476a3e016903f6fb0927fe08.tar.gz";
+      sha256 = "1anvabqi1m5wz6x2i07gdh4k1v2h9lxhvq3j2zzybsdr1i2vvsbd";
     })
     { };
   myTerraform = pkgs.terraform_0_15.withPlugins (tp: [ tp.libvirt ]);
