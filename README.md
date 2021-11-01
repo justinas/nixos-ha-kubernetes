@@ -133,7 +133,8 @@ $ rm boot/image # Destroy the base image
 
 ## Contributing
 
-Make sure the `ci-lint` script passes.
+Make sure the `ci-lint` script succeeds.
+Make sure the `check.sh` script succeeds after a deploying a fresh cluster.
 
 ## Acknowledgements
 
