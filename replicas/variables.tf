@@ -1,6 +1,6 @@
 variable "memory" {
   type        = number
-  description = "Amout of megabytes of RAM to give to each machine"
+  description = "Amount of megabytes of RAM to give to each machine"
 }
 
 variable "name" {
