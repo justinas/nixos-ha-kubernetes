@@ -22,6 +22,8 @@ resource "libvirt_domain" "node" {
 
   name = "${var.name}${count.index + 1}"
 
+  memory = var.memory
+
   disk {
     volume_id = libvirt_volume.boot[count.index].id
   }
