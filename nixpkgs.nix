@@ -1,6 +1,6 @@
 builtins.fetchGit {
-  name = "nixos-21.05-2021-08-13";
+  name = "nixos-21.11-2021-12-07";
   url = "https://github.com/NixOS/nixpkgs";
-  ref = "refs/heads/nixos-21.05";
-  rev = "a445f5829889959d65ad65e5c961d5c67e1cd677";
+  ref = "refs/heads/nixos-21.11";
+  rev = "1bd4bbd49bef217a3d1adea43498270d6e779d65";
 }

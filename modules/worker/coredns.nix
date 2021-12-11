@@ -41,5 +41,8 @@ in
   networking.firewall.interfaces.mynet.allowedTCPPorts = [ 53 ];
   networking.firewall.interfaces.mynet.allowedUDPPorts = [ 53 ];
 
-  users.users.coredns = { isSystemUser = true; };
+  users.users.coredns = {
+    group = "coredns";
+    isSystemUser = true;
+  };
 }

@@ -1,11 +1,5 @@
 { pkgs ? import (import ./nixpkgs.nix) { } }:
 let
-  colmena = import
-    (fetchTarball {
-      url = "https://github.com/zhaofengli/colmena/archive/86eeeece3cb13c12476a3e016903f6fb0927fe08.tar.gz";
-      sha256 = "1anvabqi1m5wz6x2i07gdh4k1v2h9lxhvq3j2zzybsdr1i2vvsbd";
-    })
-    { };
   myTerraform = pkgs.terraform_0_15.withPlugins (tp: [ tp.libvirt ]);
   ter = pkgs.writeShellScriptBin "ter" ''
     ${myTerraform}/bin/terraform $@ && \
