@@ -92,6 +92,7 @@ The cluster consists of:
 ```console
 $ nix-shell
 $ make-boot-image # Build the base NixOS image to boot VMs from
+$ ter init        # Initialize terraform modules
 $ ter apply       # Create the virtual machines
 $ make-certs      # Generate TLS certificates for Kubernetes, etcd, and other daemons.
 $ colmena apply   # Deploy to your cluster
