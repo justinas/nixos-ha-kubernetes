@@ -56,6 +56,14 @@ in
     clientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
     tlsCertFile = "/var/lib/secrets/kubernetes/kubelet.pem";
     tlsKeyFile = "/var/lib/secrets/kubernetes/kubelet-key.pem";
+
+    # Copied from https://github.com/NixOS/nixpkgs/blob/1d0f825944402c43ebb51dd89511d62a9d3257d5/nixos/tests/kubernetes/base.nix#L64-L70
+    # For some reason helps with https://github.com/justinas/nixos-ha-kubernetes/issues/5
+    # TODO: try to remove after updating to Kubernetes v1.23
+    extraOpts = ''\
+      --cgroups-per-qos=false \
+      --enforce-node-allocatable="" \
+    '';
   };
 
   services.kubernetes.proxy = {
