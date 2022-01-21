@@ -30,7 +30,7 @@ deployed on NixOS using [Colmena](https://github.com/zhaofengli/colmena).
 NixOS provides a Kubernetes module, which is capable of running a `master` or `worker` node.
 The module even provides basic PKI, making running simple clusters easy.
 However, HA support is limited (see, for example,
-[this comment](https://github.com/NixOS/nixpkgs/blob/acab4d1d4dff1e1bbe95af639fdc6294363cce66/nixos/modules/services/cluster/kubernetes/pki.nix)
+[this comment](https://github.com/NixOS/nixpkgs/blob/acab4d1d4dff1e1bbe95af639fdc6294363cce66/nixos/modules/services/cluster/kubernetes/pki.nix#L329)
 and an [empty section](https://nixos.wiki/wiki/Kubernetes#N_Masters_.28HA.29)
 for "N masters" in NixOS wiki).
 
