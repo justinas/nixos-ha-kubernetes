@@ -1,6 +1,6 @@
 { pkgs ? import (import ./nixpkgs.nix) { } }:
 let
-  myTerraform = pkgs.terraform_0_15.withPlugins (tp: [ tp.libvirt ]);
+  myTerraform = pkgs.terraform.withPlugins (tp: [ tp.libvirt ]);
   ter = pkgs.writeShellScriptBin "ter" ''
     ${myTerraform}/bin/terraform $@ && \
       ${myTerraform}/bin/terraform show -json > show.json

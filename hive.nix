@@ -43,6 +43,8 @@ in
 
     deployment.targetHost = nodeIP self;
     networking.hostName = name;
+
+    system.stateVersion = "22.05";
   };
 }
 // builtins.listToAttrs (map (h: { name = h; value = etcdConf; }) etcdHosts)
