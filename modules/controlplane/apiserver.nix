@@ -60,6 +60,8 @@ in
     authorizationMode = [ "RBAC" "Node" "ABAC" ];
     authorizationPolicy = corednsPolicies;
 
+    allowPrivileged = true;
+
     etcd = {
       servers = etcdServers;
       caFile = "/var/lib/secrets/kubernetes/apiserver/etcd-ca.pem";
