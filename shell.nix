@@ -39,6 +39,7 @@ pkgs.mkShell {
     # software for testing
     etcd
     kubectl
+    openssl
 
     # scripts
     ci-lint
