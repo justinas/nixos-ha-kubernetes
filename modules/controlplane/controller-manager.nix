@@ -18,6 +18,11 @@ in
 
   services.kubernetes.controllerManager = {
     enable = true;
+
+    # TODO: separate from server keys
+    serviceAccountKeyFile = "/var/lib/secrets/kubernetes/apiserver/server-key.pem";
+    rootCaFile = "/var/lib/secrets/kubernetes/ca.pem";
+
     kubeconfig = {
       caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = "/var/lib/secrets/kubernetes/controller-manager.pem";
