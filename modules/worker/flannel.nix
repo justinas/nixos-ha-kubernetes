@@ -46,7 +46,6 @@ in
   services.resolved.enable = false;
 
   services.kubernetes.kubelet = {
-    networkPlugin = "cni";
     cni.config = [{
       name = "mynet";
       type = "flannel";

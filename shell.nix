@@ -1,4 +1,4 @@
-{ pkgs ? import (import ./nixpkgs.nix) { } }:
+{ pkgs ? import (import ./nixpkgs.nix) { config.allowUnfree = true; } }:
 let
   myTerraform = pkgs.terraform.withPlugins (tp: [ tp.libvirt ]);
   ter = pkgs.writeShellScriptBin "ter" ''
