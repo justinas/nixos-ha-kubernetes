@@ -19,10 +19,12 @@ in
   services.kubernetes.controllerManager = {
     enable = true;
     kubeconfig = {
-      caFile = "/var/lib/secrets/kubernetes/ca.pem";
       certFile = "/var/lib/secrets/kubernetes/controller-manager.pem";
       keyFile = "/var/lib/secrets/kubernetes/controller-manager-key.pem";
       server = "https://${virtualIP}";
     };
+
+    # TODO: separate from server keys?
+    serviceAccountKeyFile = "/var/lib/secrets/kubernetes/apiserver/server-key.pem";
   };
 }

@@ -67,9 +67,6 @@ in
       keyFile = "/var/lib/secrets/kubernetes/apiserver/etcd-client-key.pem";
     };
 
-    clientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
-
-    kubeletClientCaFile = "/var/lib/secrets/kubernetes/ca.pem";
     kubeletClientCertFile = "/var/lib/secrets/kubernetes/apiserver/kubelet-client.pem";
     kubeletClientKeyFile = "/var/lib/secrets/kubernetes/apiserver/kubelet-client-key.pem";
 

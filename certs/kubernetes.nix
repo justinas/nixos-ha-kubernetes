@@ -16,6 +16,7 @@ let
       # Alternative names remain, as they might be useful for debugging purposes
       getAltNames "controlplane" ++
       getAltNames "loadbalancer" ++
+      lib.singleton "10.32.0.1" ++
       [ "kubernetes" "kubernetes.default" "kubernetes.default.svc" "kubernetes.default.svc.cluster" "kubernetes.svc.cluster.local" ];
   };
 
@@ -38,10 +39,6 @@ let
   etcdClientCsr = mkCsr "etcd-client" {
     cn = "kubernetes";
     altNames = getAltNames "controlplane";
-  };
-
-  kubeletCsr = mkCsr "kubelet" {
-    cn = "kubelet";
   };
 
   proxyCsr = mkCsr "kube-proxy" {
