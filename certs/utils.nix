@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  domain = "k8s.local";
+  domain = "k8s.home.arpa";
 
   inherit (pkgs.callPackage ../resources.nix { }) resourcesByRole;
   inherit (import ../utils.nix) nodeIP;

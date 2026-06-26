@@ -47,6 +47,9 @@ in
   boot.kernel.sysctl."net.ipv4.ip_nonlocal_bind" = true;
 
   networking.firewall.allowedTCPPorts = [ 443 ];
-  networking.firewall.extraCommands = "iptables -A INPUT -p vrrp -j ACCEPT";
-  networking.firewall.extraStopCommands = "iptables -D INPUT -p vrrp -j ACCEPT || true";
+  # TODO: use openFirewall instead https://github.com/NixOS/nixpkgs/pull/457523 is in stable
+  networking.firewall.extraInputRules = ''
+    meta l4proto vrrp counter accept
+    meta l4proto ah counter accept
+  '';
 }

@@ -13,7 +13,7 @@ provider "libvirt" {
 resource "libvirt_network" "k8s" {
   name      = "k8s"
   mode      = "nat"
-  domain    = "k8s.local"
+  domain    = "k8s.home.arpa"
   addresses = ["10.240.0.0/24"]
 
   dns {

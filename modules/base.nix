@@ -1,4 +1,5 @@
 {
   imports = [ ./boot.nix ./login.nix ];
-  system.stateVersion = "23.11";
+  networking.nftables.enable = true;
+  system.stateVersion = "26.05";
 }

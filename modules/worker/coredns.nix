@@ -1,4 +1,4 @@
-{ pkgs, resourcesByRole, self, ... }:
+{ self, ... }:
 let
   inherit (import ../../consts.nix) virtualIP;
   inherit (import ../../utils.nix) nodeIP;
@@ -36,7 +36,7 @@ in
     '';
   };
 
-  services.kubernetes.kubelet.clusterDns = nodeIP self;
+  services.kubernetes.kubelet.clusterDns = [ (nodeIP self) ];
 
   networking.firewall.interfaces.mynet.allowedTCPPorts = [ 53 ];
   networking.firewall.interfaces.mynet.allowedUDPPorts = [ 53 ];
