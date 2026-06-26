@@ -1,4 +1,4 @@
-{ config, name, resourcesByRole, ... }:
+{ config, name, pkgs, ... }:
 let
   inherit (import ../../consts.nix) virtualIP;
 in
@@ -38,7 +38,7 @@ in
   services.kubernetes.kubelet = rec {
     enable = true;
     unschedulable = false;
-    kubeconfig = rec {
+    kubeconfig = {
       certFile = tlsCertFile;
       keyFile = tlsKeyFile;
       server = "https://${virtualIP}";
@@ -49,10 +49,12 @@ in
 
   services.kubernetes.proxy = {
     enable = true;
+    extraOpts = "--proxy-mode nftables";
     kubeconfig = {
       certFile = "/var/lib/secrets/kubernetes/proxy.pem";
       keyFile = "/var/lib/secrets/kubernetes/proxy-key.pem";
       server = "https://${virtualIP}";
     };
   };
+  systemd.services.kube-proxy.path = [ pkgs.nftables ];
 }

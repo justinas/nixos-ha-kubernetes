@@ -1,4 +1,4 @@
-{ config, lib, resourcesByRole, ... }:
+{ config, pkgs, resourcesByRole, ... }:
 let
   etcdServers = map (r: "https://${r.values.name}:2379") (resourcesByRole "etcd");
 in
@@ -30,6 +30,9 @@ in
   services.flannel = {
     enable = true;
     network = config.services.kubernetes.clusterCidr;
+    extraNetworkConfig = {
+      EnableNFTables = true;
+    };
 
     storageBackend = "etcd"; # TODO: reconsider
     etcd = {
@@ -40,10 +43,7 @@ in
       keyFile = "/var/lib/secrets/flannel/etcd-client-key.pem";
     };
   };
-
-  # systemd.network module makes this true by default, however:
-  # https://github.com/NixOS/nixpkgs/issues/114118
-  services.resolved.enable = false;
+  systemd.services.flannel.path = [ pkgs.nftables ];
 
   services.kubernetes.kubelet = {
     cni.config = [{
