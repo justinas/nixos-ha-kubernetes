@@ -24,4 +24,7 @@ k run --rm --attach --restart Never \
     --command nslookup kubernetes \
     | tee /dev/stderr | grep -q "Address: 10.32.0.1"
 
-echo "Success."
+echo "Basic checks succeed."
+
+echo "Checking network functionality (NodePort)"
+./check_network.sh
